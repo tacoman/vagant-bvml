@@ -1,2 +1,3 @@
 Page 105: Host-Only networks have moved from the Preferences dialog to File|Host Network Manager
 If you get an error that includes "failed to open /dev/vboxnetctl: No such file or directory", run `sudo modprobe vboxnetadp`
+For this file it MUST be named vboxnet0
