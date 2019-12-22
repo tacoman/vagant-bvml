@@ -1,0 +1,6 @@
+This file is for tracking changes made from the BVML book. This amy be because of software version differences, Vagrant's needs, or anything else.
+
+Page 105: Host-Only networks have moved from the Preferences dialog to File|Host Network Manager in Vbox6.0.
+If you get an error that includes "failed to open /dev/vboxnetctl: No such file or directory", run `sudo modprobe vboxnetadp`
+
+Page 129: IP address of host interface is not being set on the host OS yet

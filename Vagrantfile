@@ -25,19 +25,22 @@ Vagrant.configure("2") do |config|
         pfsense.vm.box_version = "2.4.0"
         pfsense.vm.synced_folder '.', '/vagrant', disabled: true
 
+        #NAT, adapter 1: built-in, used by Vagrant to provision
+        #bridged, adapter 2
+        pfsense.vm.network "public_network", type: "dhcp"
+        #LAN/host-only, adapter 3
+        pfsense.vm.network "private_network", type: "dhcp", ip: "172.16.1.1"
+        #OTP1/internal network, adapter 4
+        pfsense.vm.network "private_network", type: "dhcp", virtualbox__intnet: true, ip: "172.16.2.1"
+
         pfsense.vm.provider "virtualbox" do |v|
             v.memory = 1024
             v.cpus = 2
             v.gui = true
             hardenVBox(v)
-            v.customize ["modifyvm", :id, "--nic1", "bridged"]
-            v.customize ["modifyvm", :id, "--macaddress1", "080027DD12F8"]
-            v.customize ["modifyvm", :id, "--bridgeadapter1", "wlo1"]
-            v.customize ["modifyvm", :id, "--nic2", "hostonly"]
-            v.customize ["modifyvm", :id, "--hostonlyadapter2", "vboxnet0"]
-            v.customize ["modifyvm", :id, "--macaddress2", "080027B736E4"]
-            v.customize ["modifyvm", :id, "--nic3", "intnet"]
-            v.customize ["modifyvm", :id, "--macaddress3", "0800275A6EC4"]
+            v.customize ["modifyvm", :id, "--macaddress2", "080027DD12F8"]
+            v.customize ["modifyvm", :id, "--macaddress3", "080027B736E4"]
+            v.customize ["modifyvm", :id, "--macaddress4", "0800275A6EC4"]
         end
     end
 
