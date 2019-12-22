@@ -8,6 +8,7 @@ Vagrant.configure("2") do |config|
         vm.customize ["modifyvm", :id, "--audio", "none"]
         vm.customize ["modifyvm", :id, "--usb", "off"]
     end   
+
     config.vm.define "metasploitable" do |meta|
         meta.vm.box = "e314c/Metasploitable2"
         meta.vm.box_version = "0.0.1"
@@ -42,18 +43,36 @@ Vagrant.configure("2") do |config|
             v.customize ["modifyvm", :id, "--macaddress3", "080027B736E4"]
             v.customize ["modifyvm", :id, "--macaddress4", "0800275A6EC4"]
         end
+
+        pfsense.trigger.after :halt do |t|
+            t.info = "Kali: Killing Vagrant's NAT adapter!"
+            pfsense.vm.provider "virtualbox" do |v|
+                v.customize ["modifyvm", :id, "--nic1", "none"]
+            end
+        end
     end
 
     config.vm.define "kali" do |kali|
         kali.vm.box = "kalilinux/rolling"
         kali.vm.synced_folder '.', '/vagrant', disabled: true
+        #internal network, adapter 2
+        kali.vm.network "private_network", type: "dhcp", virtualbox__intnet: true
 
         kali.vm.provider "virtualbox" do |v|
+            v.customize ["modifyvm", :id, "--macaddress2", "080027FF3D11"]
             v.memory = 4096
             v.cpus = 2
             v.gui = true
             hardenVBox(v)
         end
+
+        kali.trigger.after :halt do |t|
+            t.info = "Kali: Killing Vagrant's NAT adapter!"
+            kali.vm.provider "virtualbox" do |v|
+                v.customize ["modifyvm", :id, "--nic1", "none"]
+            end
+        end
+          
     end
 
     config.vm.define "splunk" do |splunk|

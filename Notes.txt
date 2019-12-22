@@ -4,3 +4,7 @@ Page 105: Host-Only networks have moved from the Preferences dialog to File|Host
 If you get an error that includes "failed to open /dev/vboxnetctl: No such file or directory", run `sudo modprobe vboxnetadp`
 
 Page 129: IP address of host interface is not being set on the host OS yet
+
+Vagrant requires a NAT adapter (which it provides) in order to perform its initial configuration, but this defeats the fail-closed networking.
+To get around this, we get rid of it on a :halt trigger after provisioning has run. So you need up run the machines, then halt them, then run again.
+(I could have avoided this by only using a trigger on :provision, but it wouldn't have run on vagrant up, which would defeat the semantics of the tool.)
