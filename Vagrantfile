@@ -34,8 +34,8 @@ Vagrant.configure("2") do |config|
         pfsense.vm.network "private_network", type: "dhcp", virtualbox__intnet: true, ip: "172.16.2.1"
 
         pfsense.vm.provider "virtualbox" do |v|
-            v.memory = 1024
-            v.cpus = 2
+            v.memory = 512
+            v.cpus = 1
             v.gui = true
             hardenVBox(v)
             v.customize ["modifyvm", :id, "--macaddress2", "080027DD12F8"]
